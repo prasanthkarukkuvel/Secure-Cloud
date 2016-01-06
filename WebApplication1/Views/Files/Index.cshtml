@@ -1,0 +1,59 @@
+﻿@model IEnumerable<SecureCloud.Models.UserFileStore>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>My Drive</h2>
+
+<p style="text-align:right">
+    <a href="@Url.Action("Create")" class="btn btn-sm btn-primary">
+        <i class="glyphicon glyphicon-upload"></i> Upload Files
+    </a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            File
+        </th>
+
+        <th>
+            Type
+        </th>
+        <th>
+            Created
+        </th>
+        <th style="text-align: right">
+            Size
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.FileStore.Name, "Details", new { id = item.ID })
+            </td>
+
+            <td>
+                @item.FileStore.Type
+            </td>
+            <td>
+                @item.FileStore.CreatedAt.ToString("dd MMM, yyyy")
+            </td>
+            <td style="text-align: right">
+                @item.FileStore.SizeText
+            </td>
+            <td style="text-align:right">
+                <a href="@Url.Action("Share", new { id = item.ID })" class="btn btn-sm btn-info">
+                    <i class="glyphicon glyphicon-share"></i> Share
+                </a>
+                <a href="@Url.Action("Download", new { id = item.ID })" class="btn btn-sm btn-success">
+                    <i class="glyphicon glyphicon-download-alt"></i> Download
+                </a>
+            </td>
+        </tr>
+    }
+
+</table>

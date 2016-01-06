@@ -1,0 +1,44 @@
+﻿@model SecureCloud.Models.UserFileStore
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>My Drive</h2>
+
+<div>
+    <h4>File Information</h4>
+
+    <table class="table table-bordered detail-table">
+        <tr>
+            <td>Name</td>
+            <td>@Model.FileStore.Name</td>
+        </tr>
+        <tr>
+            <td>Type</td>
+            <td>@Model.FileStore.Type</td>
+        </tr>
+        <tr>
+            <td>Created</td>
+            <td>@Model.FileStore.CreatedAt.ToString("dd MMM, yyyy")</td>
+        </tr>
+        <tr>
+            <td>Size</td>
+            <td>@Model.FileStore.SizeText</td>
+        </tr>
+    </table>
+    <p>
+        <div>
+            <a href="@Url.Action("Share", new { id = Model.ID })" class="btn btn-sm btn-info">
+                <i class="glyphicon glyphicon-share"></i> Share
+            </a>
+            <a href="@Url.Action("Delete", new { id = Model.ID })" class="btn btn-sm btn-danger">
+                <i class="glyphicon glyphicon-trash"></i> Delete
+            </a>
+        </div>
+    </p>
+</div>
+<p>
+    
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,29 @@
+﻿@model Dropbox.Api.Users.FullAccount
+
+@{
+    ViewBag.Title = "Account Info";
+}
+
+<h2>Dropbox Account</h2>
+
+
+<div>
+    <table class="table table-bordered detail-table">
+        <tr>
+            <td>Name</td>
+            <td>@Model.Name.DisplayName</td>
+        </tr>
+        <tr>
+            <td>Account ID</td>
+            <td>@Model.AccountId</td>
+        </tr>       
+        <tr>
+            <td>Email</td>
+            <td>@Model.Email</td>
+        </tr>       
+        <tr>
+            <td>Country</td>
+            <td>@Model.Country</td>
+        </tr>
+    </table>    
+</div>

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SecureCloud.Models.ShareFile>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Shared</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            File
+        </th>
+
+        <th>
+            Type
+        </th>
+        <th>
+            Shared On
+        </th>
+        <th>
+            Shared With
+        </th>
+        <th style="text-align: right">
+            Size
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.FileStore.Name
+            </td>
+            <td>
+                @item.FileStore.Type
+            </td>
+            <td>
+                @item.CreatedAt.ToString("dd MMM, yyyy")
+            </td>
+            <td>
+                @item.User.UserName
+            </td>
+            <td style="text-align: right">
+                @item.FileStore.SizeText
+            </td>
+            <td style="text-align:right">
+                <a href="@Url.Action("Revoke", new { id = item.ID })" class="btn btn-sm btn-danger">
+                    <i class="glyphicon glyphicon-ban-circle"></i> Revoke
+                </a>
+            </td>
+        </tr>
+    }
+
+</table>

@@ -1,0 +1,129 @@
+﻿@model SecureCloud.Models.UserFileStore
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Upload Files to Cloud</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Select files to upload</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input id="fileupload" type="file" name="files" multiple="multiple" />
+            </div>
+        </div>
+
+        <div class="progress" id="progress" style="display:none">
+            <div class="bar progress-bar progress-bar-striped active" role="progressbar" style="width: 0%">
+
+            </div>
+        </div>
+
+        <ul class="list-group" id="files"></ul>
+
+        <ul class="list-group" id="uploaded"></ul>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="button" value="Upload" id="upload" disabled="disabled" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(function () {
+
+            var list = [];
+
+            $("#upload").off('click').on('click', function () {
+                $("#upload").attr("disabled", "disabled");
+                $.each(list, function (i, data) {
+                    data.submit();
+                });
+            });
+
+            $('#fileupload').fileupload({
+                autoUpload: false,
+                sequentialUploads: true,
+                dataType: 'json',
+                url: '@Url.Action("Upload")',
+                done: function (e, data) {
+                    if (data.result.status) {                        
+                        $("#uploaded").append('<li class="list-group-item list-group-item-danger"><span class="badge">Failed</span>' + data.result.name + '</li>');
+                    } else {
+                        $("#uploaded").append('<li class="list-group-item"><span class="badge">Uploaded</span>' + data.result.name + '</li>');
+                    }
+
+                    for (var i = 0; i < list.length; i++) {                       
+                        if (list[i].files[0].name == data.result.name) {
+                            list.splice(i, 1);
+                        }
+                    }
+
+                    if (list.length == 0) {
+                        $("#progress").fadeOut(100);
+                        $("#upload").val("Uploaded");
+                    }
+                },
+                fail: function (e) {
+                    console.error(e);
+                },
+                start: function () {
+                    $("#progress").fadeIn(100);
+
+                },
+                progress: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+
+                    if (progress >= 100) {
+                        $("#files > li").first().remove();
+                    }
+                },
+                progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $("#upload").val("Uploading... " + progress + '%');
+                    $('#progress .bar').css(
+                        'width',
+                        progress + '%'
+                    );
+
+                    if (progress >= 100) {
+                        $("#upload").val("Processing..");
+                    }
+                },
+                change: function (e, data) {
+                    $("#files").html("");
+                    $("#uploaded").html("");
+
+                    $.each(data.files, function (i, file) {
+                        $("#files").append('<li class="list-group-item"><span class="badge">Waiting</span><span>' + file.name + '</span></li>')
+                    });
+
+                    $("#upload").val("Upload");
+                    $("#upload").removeAttr("disabled");
+                },
+                add: function (e, data) {
+                    list.push(data);
+                }
+
+            });
+        });
+    </script>
+}
